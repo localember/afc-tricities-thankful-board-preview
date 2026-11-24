@@ -9,4 +9,4 @@ Design preview, not live. Clickable mockup only (client side, localStorage + Bro
 
 Sample notes are labeled "Sample" and are not from real patients.
 
-TV view (Nov 24, 2026): starts as the turkey alone; each approved note adds a feather with the words on the feather. Add ?demo=N to /tv/ to preview N sample feathers without changing saved notes.
+TV view (Nov 24, 2026): opens showing the turkey with the 6 sample notes as feathers, each with its words on the feather, and the count in the header. Each note staff approves adds another feather. Add ?demo=N to /tv/ to preview N sample feathers without changing saved notes; ?demo=0 shows the turkey alone.

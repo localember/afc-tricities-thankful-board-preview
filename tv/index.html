@@ -52,7 +52,8 @@ function el(t,a){var e=document.createElementNS(NS,t);for(var k in a)e.setAttrib
 function approved(){
  var all=AFC.all();
  if(demo!==null){return all.filter(function(n){return n.sample;}).slice(0,demo).map(function(n){var c={};for(var k in n)c[k]=n[k];c.status='approved';return c;});}
- return all.filter(function(n){return n.status==='approved';}).sort(function(a,b){return (a.approvedTs||a.ts)-(b.approvedTs||b.ts);});
+ /* Default display: the 6 sample notes as feathers (unless staff declined one) plus every real approved note */
+ return all.filter(function(n){return n.sample?n.status!=='declined':n.status==='approved';}).sort(function(a,b){return (a.status==='approved'?(a.approvedTs||a.ts):a.ts)-(b.status==='approved'?(b.approvedTs||b.ts):b.ts);});
 }
 function words(n,len){
  if(n.type==='ink')return '<img src="'+n.img+'" alt="Handwritten thankful note">';
