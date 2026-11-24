@@ -10,17 +10,18 @@ html,body{height:100%;overflow:hidden;background:#0E465B}
 .tvhead h1{font:800 54px/1.1 var(--font-heading);color:var(--primary-dark);margin-top:4px}
 .count{text-align:right;font:700 24px var(--font-body);color:var(--slate)}
 .count b{display:block;font:800 72px/1 var(--font-heading);color:var(--primary)}
+#flock{position:absolute;left:0;top:0;width:1920px;height:1080px;transform-origin:960px 1040px;transition:transform .7s ease}
 #board{position:absolute;left:0;top:0;width:1920px;height:1080px}
 .feather{position:absolute;transform-origin:50% 100%;border-radius:50% 50% 46% 46% / 64% 64% 36% 36%;box-shadow:0 10px 24px rgba(60,30,0,.22);overflow:hidden}
 .feather:before{content:"";position:absolute;left:50%;top:8%;bottom:0;width:5px;margin-left:-2.5px;background:rgba(255,255,255,.35);border-radius:3px}
 .feather .words{position:absolute;left:50%;display:flex;align-items:center;justify-content:center;text-align:center;color:#fff;font:800 26px/1.12 var(--font-heading);text-shadow:0 2px 4px rgba(0,0,0,.35);padding:0 6px}
-.feather .words img{max-width:100%;max-height:100%;background:#fff;border-radius:10px;padding:4px}
+.feather .words img{max-width:100%;max-height:100%;background:transparent;padding:0;filter:brightness(0) invert(1)}
 .feather.new{animation:grow 1.2s ease-out both}
 .feather.new{box-shadow:0 0 0 6px rgba(255,214,90,.9),0 0 40px rgba(255,200,60,.9)}
 @keyframes grow{0%{scale:.1;opacity:0}70%{scale:1.06;opacity:1}100%{scale:1;opacity:1}}
 #body{position:absolute;left:0;top:0;width:1920px;height:1080px;pointer-events:none}
 .token{position:absolute;display:flex;align-items:center;justify-content:center;text-align:center;color:#fff;font:800 24px/1.15 var(--font-heading);padding:18px;box-shadow:0 10px 24px rgba(0,0,0,.18);text-shadow:0 2px 4px rgba(0,0,0,.3)}
-.token img{max-width:100%;max-height:100%;background:#fff;border-radius:10px}
+.token img{max-width:100%;max-height:100%;background:transparent;filter:brightness(0) invert(1)}
 .foot{position:absolute;left:60px;bottom:40px;width:520px;display:flex;align-items:center;gap:24px;color:var(--primary-dark);z-index:3}
 .qr{width:120px;height:120px;border-radius:14px;background:#fff;border:4px dashed var(--primary-light);display:grid;place-items:center;font:800 18px/1.2 var(--font-body);color:var(--primary);text-align:center;flex:none}
 .foot b{font:800 40px var(--font-heading);display:block}
@@ -30,35 +31,99 @@ html,body{height:100%;overflow:hidden;background:#0E465B}
 <div id="stage">
 <div class="tvbanner">Design preview, not live. Sample notes only.</div>
 <header class="tvhead"><img src="https://www.afctricities.com/wp-content/uploads/2026/04/Advanced-Family-Chiropractic-Logo-v1.png" alt="Advanced Family Chiropractic logo"><div class="t"><small id="month">November thankful board</small><h1 id="question">Why are you thankful for chiropractic?</h1></div><div class="count"><b id="num">0</b><span id="unit">feathers of thanks</span></div></header>
+<div id="flock">
 <div id="board" aria-label="Thankful board"></div>
 <svg id="body" viewBox="0 0 1920 1080" aria-hidden="true"></svg>
+</div>
 <div class="foot"><div class="qr">QR code<br>goes here</div><div><b>Add your note!</b><span>Scan the code or ask for the office iPad.</span></div></div>
 </div>
 <button class="btn small ghost" id="fs">Full screen</button>
 <script src="../assets/app.js"></script>
 <script>
 (function(){
-var NS='http://www.w3.org/2000/svg',board=document.getElementById('board'),body=document.getElementById('body'),E=AFC.esc;
-/* Feather colors all carry white text at readable contrast */
+var NS='http://www.w3.org/2000/svg',board=document.getElementById('board'),body=document.getElementById('body'),flock=document.getElementById('flock'),E=AFC.esc;
 var COLORS={turkey:['#C2410C','#176D8C','#B91C1C','#92400E','#0E465B','#9F1239','#B45309','#155E75','#9A3412','#BE123C','#7C2D12','#1E5A70','#A16207'],
 ornaments:['#B91C1C','#176D8C','#9F1239','#0E465B','#B45309','#2F6E4F'],
 hearts:['#BE185D','#9F1239','#B91C1C','#DB2777','#E11D48']};
-/* Fan of 11 feathers, filled from the center out */
-var ANGLES=[0,-15,15,-30,30,-45,45,-60,60,-75,75];
-var PX=960,PY=820,LEN=600,W=118;
+var BASE_ANGLES=[0,-15,15,-30,30,-45,45,-60,60,-75,75];
+var PX=960,PY=820,BASE_LEN=600,BASE_W=118,ORIGIN_X=960,ORIGIN_Y=1040;
+var SAFE={top:214,left:36,right:1884,bottom:1070};
 var seen=null,fresh=null;
 var demo=null;try{var q=new URLSearchParams(location.search).get('demo');if(q!==null)demo=parseInt(q,10)||0;}catch(e){}
+var DEMO_TEXT=['Sample: The friendly team every visit','Sample: Feeling cared for','Sample: A welcoming front desk that knows my family','Sample: Time set aside just for me','Sample: Kind people and a calm office','Sample: Being listened to','Sample: Less pain on busy days','Sample: A calm place to land','Sample: They know my family','Sample: Sleeping better','Sample: Easy to get in','Sample: I can move again','Sample: Health I can count on','Sample: They always listen','Sample: Help with my back','Sample: Feeling like myself','Sample: Grateful for this care','Sample: So much support','Sample: Better days ahead','Sample: Relief that lasts'];
 function el(t,a){var e=document.createElementNS(NS,t);for(var k in a)e.setAttribute(k,a[k]);body.appendChild(e);return e;}
+function inkImage(text){
+ var o=document.createElement('canvas');o.width=520;o.height=200;
+ var x=o.getContext('2d');x.fillStyle='#0E465B';
+ var fs=56;do{x.font='600 '+fs+'px Caveat, cursive';fs-=3;}while(x.measureText(text).width>480&&fs>22);
+ x.textAlign='center';x.textBaseline='middle';x.fillText(text,260,100);
+ return o.toDataURL('image/png');
+}
+function demoNotes(n){
+ var t=Date.now(),out=[];
+ for(var i=0;i<n;i++){
+  var raw=DEMO_TEXT[i%DEMO_TEXT.length];
+  var label=i<DEMO_TEXT.length?raw:('Sample: '+raw.replace(/^Sample: /,''));
+  var ink=(i%5===1);
+  var note={id:'d'+i,status:'approved',sample:true,ts:t-(n-i)*1000};
+  if(ink){note.type='ink';note.img=inkImage(label.replace(/^Sample: /,''));note.text='';}
+  else{note.type='text';note.text=label;}
+  out.push(note);
+ }
+ return out;
+}
 function approved(){
  var all=AFC.all();
- if(demo!==null){return all.filter(function(n){return n.sample;}).slice(0,demo).map(function(n){var c={};for(var k in n)c[k]=n[k];c.status='approved';return c;});}
- /* Default display: the 6 sample notes as feathers (unless staff declined one) plus every real approved note */
+ if(demo!==null)return demoNotes(demo);
  return all.filter(function(n){return n.sample?n.status!=='declined':n.status==='approved';}).sort(function(a,b){return (a.status==='approved'?(a.approvedTs||a.ts):a.ts)-(b.status==='approved'?(b.approvedTs||b.ts):b.ts);});
 }
-function words(n,len){
+function words(n){
  if(n.type==='ink')return '<img src="'+n.img+'" alt="Handwritten thankful note">';
  var t=n.text||'',fs=t.length>64?19:t.length>40?21:25;
  return '<span style="font-size:'+fs+'px">'+E(t)+'</span>';
+}
+function centerOut(angles){return angles.slice().sort(function(a,b){return Math.abs(a)-Math.abs(b)||a-b;});}
+function ringAngles(layer){
+ if(layer===0)return BASE_ANGLES.slice();
+ var spread=75+Math.min(layer,4)*8;
+ var count=11+layer*2;
+ var step=(2*spread)/(count-1);
+ var start=-spread;
+ if(layer%2){start=-spread+step/2;count-=1;}
+ var a=[];for(var i=0;i<count;i++)a.push(Math.round((start+i*step)*10)/10);
+ return centerOut(a);
+}
+function layout(n){
+ var slots=[],used=0,layer=0;
+ while(used<n){
+  var angles=ringAngles(layer),len=BASE_LEN+layer*110;
+  for(var i=0;i<angles.length&&used<n;i++){
+   var j=used,jitA=layer?Math.sin(j*2.17+layer)*1.8:0,jitL=layer?Math.sin(j*3.11+layer*1.7)*12:0;
+   slots.push({angle:angles[i]+jitA,len:len+jitL,w:BASE_W,layer:layer});
+   used++;
+  }
+  layer++;
+  if(layer>20)break;
+ }
+ return slots;
+}
+function tipPoint(sl){
+ var rad=sl.angle*Math.PI/180;
+ return {x:PX+Math.sin(rad)*sl.len,y:PY-Math.cos(rad)*sl.len,tx:PX+Math.sin(rad)*sl.len+Math.cos(rad)*(sl.w/2),ty:PY-Math.cos(rad)*sl.len,ux:PX+Math.sin(rad)*sl.len-Math.cos(rad)*(sl.w/2),uy:PY-Math.cos(rad)*sl.len};
+}
+function fitScale(slots){
+ var pts=[{x:600,y:1050},{x:1320,y:1050},{x:960,y:490},{x:776,y:780},{x:1144,y:780}];
+ slots.forEach(function(sl){var p=tipPoint(sl);pts.push({x:p.x,y:p.y},{x:p.tx,y:p.y},{x:p.ux,y:p.y});});
+ var s=1;
+ pts.forEach(function(p){
+  var dx=p.x-ORIGIN_X,dy=p.y-ORIGIN_Y;
+  if(dy<0){var a=(SAFE.top-ORIGIN_Y)/dy;if(a<s)s=a;}
+  if(dy>0){var b=(SAFE.bottom-ORIGIN_Y)/dy;if(b<s)s=b;}
+  if(dx<0){var c=(SAFE.left-ORIGIN_X)/dx;if(c<s)s=c;}
+  if(dx>0){var d=(SAFE.right-ORIGIN_X)/dx;if(d<s)s=d;}
+ });
+ if(s>1)s=1;if(s<0.38)s=0.38;
+ return Math.round(s*1000)/1000;
 }
 function drawTurkey(){
  body.innerHTML='';
@@ -76,24 +141,28 @@ function drawTurkey(){
 }
 function drawFeathers(list,newId){
  board.innerHTML='';var pal=COLORS.turkey;
- var show=list.slice(-ANGLES.length);
- show.forEach(function(n,i){
-  var a=ANGLES[i],f=document.createElement('div');
+ var slots=layout(list.length);
+ flock.style.transform='scale('+fitScale(slots)+')';
+ list.forEach(function(n,i){
+  var sl=slots[i],a=sl.angle,len=sl.len,w=sl.w;
+  var f=document.createElement('div');
   f.className='feather'+(n.id===newId?' new':'');
-  f.style.cssText='left:'+(PX-W/2)+'px;top:'+(PY-LEN)+'px;width:'+W+'px;height:'+LEN+'px;background:'+pal[i%pal.length]+';transform:rotate('+a+'deg)';
-  /* Words run along the feather and always read left to right */
-  var rot=a<0?90:-90,tw=220,th=96,cy=LEN-440;
-  f.innerHTML='<div class="words" style="width:'+tw+'px;height:'+th+'px;margin-left:'+(-tw/2)+'px;top:'+(cy-th/2)+'px;transform:rotate('+rot+'deg)">'+words(n,LEN)+'</div>';
+  f.style.cssText='left:'+(PX-w/2)+'px;top:'+(PY-len)+'px;width:'+w+'px;height:'+len+'px;background:'+pal[i%pal.length]+';transform:rotate('+a+'deg)';
+  var rot=a<0?90:-90,tw=220,th=96,cy=155;
+  f.innerHTML='<div class="words" style="width:'+tw+'px;height:'+th+'px;margin-left:'+(-tw/2)+'px;top:'+(cy-th/2)+'px;transform:rotate('+rot+'deg)">'+words(n)+'</div>';
   board.appendChild(f);
  });
 }
 function drawTokens(theme,list,newId){
- body.innerHTML='';board.innerHTML='';var pal=COLORS[theme];
- var show=list.slice(-12),cols=4,cw=380,chh=230,x0=(1920-cols*cw)/2;
+ body.innerHTML='';board.innerHTML='';flock.style.transform='scale(1)';
+ var pal=COLORS[theme];
+ var show=list.slice(),cols=4,rows=Math.max(3,Math.ceil(show.length/cols));
+ var cw=Math.min(380,1600/cols),chh=Math.min(230,(1080-240)/rows),x0=(1920-cols*cw)/2;
+ var scale=1;if(230+rows*chh>980){scale=(980-230)/(rows*chh);chh=chh;}
  show.forEach(function(n,i){var t=document.createElement('div');t.className='token'+(n.id===newId?' new':'');
   var r=theme==='hearts'?'46% 46% 50% 50% / 40% 40% 60% 60%':'50%';
-  t.style.cssText='left:'+(x0+(i%cols)*cw+20)+'px;top:'+(230+Math.floor(i/cols)*chh+10)+'px;width:'+(cw-40)+'px;height:'+(chh-20)+'px;border-radius:'+r+';background:'+pal[i%pal.length];
-  t.innerHTML=words(n,cw);board.appendChild(t);});
+  t.style.cssText='left:'+(x0+(i%cols)*cw+20)+'px;top:'+(230+Math.floor(i/cols)*chh+10)+'px;width:'+(cw-40)+'px;height:'+(chh-20)+'px;border-radius:'+r+';background:'+pal[i%pal.length]+';transform:scale('+scale+')';
+  t.innerHTML=words(n);board.appendChild(t);});
 }
 function render(newId){
  var th=AFC.theme(),list=approved();
@@ -112,6 +181,7 @@ function fit(){var s=Math.min(innerWidth/1920,innerHeight/1080);document.getElem
 window.addEventListener('resize',fit);fit();
 document.getElementById('fs').onclick=function(){if(document.documentElement.requestFullscreen)document.documentElement.requestFullscreen();};
 var hideT;document.addEventListener('mousemove',function(){var b=document.getElementById('fs');b.style.display='';clearTimeout(hideT);hideT=setTimeout(function(){b.style.display='none';},3000);});
-AFC.onChange(changed);changed();
+function start(){AFC.onChange(changed);changed();}
+if(document.fonts&&document.fonts.ready)document.fonts.ready.then(start).catch(start);else start();
 })();
 </script></body></html>
