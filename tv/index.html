@@ -1,132 +1,116 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="robots" content="noindex, nofollow"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@600;700;800&family=Caveat:wght@600&display=swap" rel="stylesheet"><title>Waiting room TV: AFC thankful board (design preview)</title><link rel="stylesheet" href="../assets/styles.css">
 <style>
 html,body{height:100%;overflow:hidden;background:#0E465B}
-#stage{position:absolute;left:50%;top:50%;width:1920px;height:1080px;transform-origin:center center;background:radial-gradient(ellipse at 30% 60%,#FFF8EC 0%,#FBEFDC 55%,#F3E2C6 100%);overflow:hidden}
+#stage{position:absolute;left:50%;top:50%;width:1920px;height:1080px;transform-origin:center center;background:radial-gradient(ellipse at 50% 70%,#FFF8EC 0%,#FBEFDC 55%,#F3E2C6 100%);overflow:hidden}
 .tvbanner{position:absolute;top:0;left:0;right:0;height:44px;background:#F59E0B;color:#1f1300;font:800 22px/44px var(--font-body);text-align:center;letter-spacing:.03em;z-index:5}
-.tvhead{position:absolute;top:44px;left:0;right:0;height:150px;display:flex;align-items:center;padding:0 64px;gap:40px;background:#fff;border-bottom:6px solid var(--primary)}
+.tvhead{position:absolute;top:44px;left:0;right:0;height:150px;display:flex;align-items:center;padding:0 64px;gap:40px;background:#fff;border-bottom:6px solid var(--primary);z-index:4}
 .tvhead img{height:110px}
 .tvhead .t{flex:1}
 .tvhead small{font:800 24px var(--font-body);color:var(--primary);text-transform:uppercase;letter-spacing:.12em}
 .tvhead h1{font:800 54px/1.1 var(--font-heading);color:var(--primary-dark);margin-top:4px}
 .count{text-align:right;font:700 24px var(--font-body);color:var(--slate)}
 .count b{display:block;font:800 72px/1 var(--font-heading);color:var(--primary)}
-#art{position:absolute;left:40px;top:205px;width:860px;height:860px}
-.slot{transition:fill .8s,opacity .8s,transform .8s}
-.slot.empty{fill:#fff;fill-opacity:.55;stroke:#96BDCB;stroke-width:4;stroke-dasharray:12 10}
-.slot.lit{filter:drop-shadow(0 0 16px rgba(255,200,60,.95))}
-@keyframes pop{0%{transform:scale(.2);opacity:0}70%{transform:scale(1.08)}100%{transform:scale(1);opacity:1}}
-.new{animation:pop 1s ease-out both;transform-box:fill-box;transform-origin:50% 100%}
-.spot{position:absolute;left:940px;top:250px;width:920px;height:640px;background:#fff;border-radius:36px;box-shadow:0 24px 60px rgba(14,70,91,.18);padding:64px 70px;display:flex;flex-direction:column;justify-content:center;border-top:14px solid var(--primary)}
-.spot .eyebrow{font:800 26px var(--font-body);color:var(--primary);letter-spacing:.08em;text-transform:uppercase;display:flex;gap:18px;align-items:center}
-.spot .eyebrow .tag{background:#FEF3C7;color:#92400E;border-radius:999px;padding:4px 18px;font-size:22px;letter-spacing:.04em}
-.spot .eyebrow .tag.fresh{background:#DCFCE7;color:#166534}
-.spot .msg{font:800 72px/1.18 var(--font-heading);color:var(--ink);margin-top:28px;transition:opacity .5s}
-.spot .msg.small{font-size:58px}
-.spot img{width:100%;max-height:400px;object-fit:contain;margin-top:20px}
-.spot .fade{opacity:0}
-.dots{display:flex;gap:12px;margin-top:40px;flex-wrap:wrap}
-.dots i{width:18px;height:18px;border-radius:50%;background:#E5EAF0}
-.dots i.on{background:var(--primary)}
-.foot{position:absolute;left:940px;top:920px;width:920px;display:flex;align-items:center;gap:28px;color:var(--primary-dark)}
+#board{position:absolute;left:0;top:0;width:1920px;height:1080px}
+.feather{position:absolute;transform-origin:50% 100%;border-radius:50% 50% 46% 46% / 64% 64% 36% 36%;box-shadow:0 10px 24px rgba(60,30,0,.22);overflow:hidden}
+.feather:before{content:"";position:absolute;left:50%;top:8%;bottom:0;width:5px;margin-left:-2.5px;background:rgba(255,255,255,.35);border-radius:3px}
+.feather .words{position:absolute;left:50%;display:flex;align-items:center;justify-content:center;text-align:center;color:#fff;font:800 26px/1.12 var(--font-heading);text-shadow:0 2px 4px rgba(0,0,0,.35);padding:0 6px}
+.feather .words img{max-width:100%;max-height:100%;background:#fff;border-radius:10px;padding:4px}
+.feather.new{animation:grow 1.2s ease-out both}
+.feather.new{box-shadow:0 0 0 6px rgba(255,214,90,.9),0 0 40px rgba(255,200,60,.9)}
+@keyframes grow{0%{scale:.1;opacity:0}70%{scale:1.06;opacity:1}100%{scale:1;opacity:1}}
+#body{position:absolute;left:0;top:0;width:1920px;height:1080px;pointer-events:none}
+.token{position:absolute;display:flex;align-items:center;justify-content:center;text-align:center;color:#fff;font:800 24px/1.15 var(--font-heading);padding:18px;box-shadow:0 10px 24px rgba(0,0,0,.18);text-shadow:0 2px 4px rgba(0,0,0,.3)}
+.token img{max-width:100%;max-height:100%;background:#fff;border-radius:10px}
+.foot{position:absolute;left:60px;bottom:40px;width:520px;display:flex;align-items:center;gap:24px;color:var(--primary-dark);z-index:3}
 .qr{width:120px;height:120px;border-radius:14px;background:#fff;border:4px dashed var(--primary-light);display:grid;place-items:center;font:800 18px/1.2 var(--font-body);color:var(--primary);text-align:center;flex:none}
 .foot b{font:800 40px var(--font-heading);display:block}
 .foot span{font:600 26px var(--font-body);color:var(--slate)}
 #fs{position:fixed;right:14px;bottom:14px;z-index:9;opacity:.75}
-.empty-msg{font:700 56px/1.2 var(--font-heading);color:var(--primary-dark)}
 </style></head><body>
 <div id="stage">
 <div class="tvbanner">Design preview, not live. Sample notes only.</div>
 <header class="tvhead"><img src="https://www.afctricities.com/wp-content/uploads/2026/04/Advanced-Family-Chiropractic-Logo-v1.png" alt="Advanced Family Chiropractic logo"><div class="t"><small id="month">November thankful board</small><h1 id="question">Why are you thankful for chiropractic?</h1></div><div class="count"><b id="num">0</b><span id="unit">feathers of thanks</span></div></header>
-<svg id="art" viewBox="0 0 900 900" aria-label="Thankful board artwork"></svg>
-<section class="spot" id="spot"></section>
+<div id="board" aria-label="Thankful board"></div>
+<svg id="body" viewBox="0 0 1920 1080" aria-hidden="true"></svg>
 <div class="foot"><div class="qr">QR code<br>goes here</div><div><b>Add your note!</b><span>Scan the code or ask for the office iPad.</span></div></div>
 </div>
 <button class="btn small ghost" id="fs">Full screen</button>
 <script src="../assets/app.js"></script>
 <script>
 (function(){
-var NS='http://www.w3.org/2000/svg',art=document.getElementById('art'),E=AFC.esc;
-var COLORS={turkey:['#C2410C','#F59E0B','#B91C1C','#D97706','#176D8C','#EA580C','#92400E','#FBBF24','#9F1239','#0E465B','#E8590C','#CA8A04'],
-ornaments:['#B91C1C','#FBBF24','#176D8C','#E5E7EB','#9F1239','#F59E0B','#0E465B','#96BDCB'],
-hearts:['#E0457B','#BE185D','#F472B6','#B91C1C','#FB7185','#9F1239','#F9A8D4']};
-var seen=null,idx=0,timer=null,fresh=null;
-function el(t,a,p){var e=document.createElementNS(NS,t);for(var k in a)e.setAttribute(k,a[k]);(p||art).appendChild(e);return e;}
-function slots(theme){
- var s=[];
- if(theme==='turkey'){
-  var outer=[],inner=[];
-  for(var i=0;i<12;i++)outer.push(-77+i*14);
-  for(var j=0;j<9;j++)inner.push(-64+j*16);
-  function ord(a){return a.slice().sort(function(x,y){return Math.abs(x)-Math.abs(y)||x-y;});}
-  ord(outer).forEach(function(a){s.push({kind:'feather',a:a,len:410,w:66});});
-  ord(inner).forEach(function(a){s.push({kind:'feather',a:a,len:300,w:58});});
- }else if(theme==='ornaments'){
-  for(var r=1;r<=6;r++){var y=210+r*88;var half=(y-90)*0.33;for(var k=0;k<r;k++){var x=r===1?450:450-half+(2*half)*k/(r-1);s.push({kind:'orn',x:x,y:y});}}
- }else{
-  ['.##.##.','#######','#######','.#####.','..###..','...#...'].forEach(function(row,gy){row.split('').forEach(function(ch,gx){if(ch==='#')s.push({kind:'heart',x:450+(gx-3)*112,y:190+gy*108});});});
- }
- return s;
+var NS='http://www.w3.org/2000/svg',board=document.getElementById('board'),body=document.getElementById('body'),E=AFC.esc;
+/* Feather colors all carry white text at readable contrast */
+var COLORS={turkey:['#C2410C','#176D8C','#B91C1C','#92400E','#0E465B','#9F1239','#B45309','#155E75','#9A3412','#BE123C','#7C2D12','#1E5A70','#A16207'],
+ornaments:['#B91C1C','#176D8C','#9F1239','#0E465B','#B45309','#2F6E4F'],
+hearts:['#BE185D','#9F1239','#B91C1C','#DB2777','#E11D48']};
+/* Fan of 11 feathers, filled from the center out */
+var ANGLES=[0,-15,15,-30,30,-45,45,-60,60,-75,75];
+var PX=960,PY=820,LEN=600,W=118;
+var seen=null,fresh=null;
+var demo=null;try{var q=new URLSearchParams(location.search).get('demo');if(q!==null)demo=parseInt(q,10)||0;}catch(e){}
+function el(t,a){var e=document.createElementNS(NS,t);for(var k in a)e.setAttribute(k,a[k]);body.appendChild(e);return e;}
+function approved(){
+ var all=AFC.all();
+ if(demo!==null){return all.filter(function(n){return n.sample;}).slice(0,demo).map(function(n){var c={};for(var k in n)c[k]=n[k];c.status='approved';return c;});}
+ return all.filter(function(n){return n.status==='approved';}).sort(function(a,b){return (a.approvedTs||a.ts)-(b.approvedTs||b.ts);});
 }
-function drawArt(theme,count,lit,newIdx){
- art.innerHTML='';var S=slots(theme),pal=COLORS[theme];
- if(theme==='turkey'){
-  el('ellipse',{cx:450,cy:860,rx:330,ry:26,fill:'#E9D5B0'});
-  var g=el('g',{});
-  S.slice().reverse().forEach(function(sl,ri){var i=S.length-1-ri;var filled=i<count;
-   var fg=el('g',{transform:'translate(450 600) rotate('+sl.a+')'},g);
-   var p=el('path',{d:'M0 0C-'+sl.w+' -'+sl.len*0.35+' -'+sl.w+' -'+sl.len*0.75+' 0 -'+sl.len+'C'+sl.w+' -'+sl.len*0.75+' '+sl.w+' -'+sl.len*0.35+' 0 0Z','class':'slot '+(filled?'':'empty')+(i===lit?' lit':'')+(i===newIdx?' new':''),fill:filled?pal[i%pal.length]:'#fff'},fg);
-   if(filled)el('path',{d:'M0 -20L0 -'+(sl.len-30),stroke:'rgba(255,255,255,.55)','stroke-width':5,'stroke-linecap':'round',fill:'none'},fg);
-  });
-  el('path',{d:'M405 790l-10 60M395 850l-25 14M395 850l0 18M395 850l22 12M495 790l10 60M505 850l-22 12M505 850l0 18M505 850l25 14',stroke:'#E8590C','stroke-width':12,'stroke-linecap':'round',fill:'none'});
-  el('ellipse',{cx:450,cy:640,rx:165,ry:175,fill:'#8B5A2B'});
-  el('ellipse',{cx:450,cy:680,rx:105,ry:125,fill:'#C08552'});
-  el('path',{d:'M330 600q-40 80 10 150q30-60 30-130z',fill:'#6F4520'});el('path',{d:'M570 600q40 80-10 150q-30-60-30-130z',fill:'#6F4520'});
-  el('circle',{cx:450,cy:430,r:88,fill:'#A0522D'});
-  el('circle',{cx:418,cy:410,r:20,fill:'#fff'});el('circle',{cx:482,cy:410,r:20,fill:'#fff'});
-  el('circle',{cx:422,cy:414,r:10,fill:'#0F172A'});el('circle',{cx:478,cy:414,r:10,fill:'#0F172A'});
-  el('path',{d:'M428 446l22 38l22-38z',fill:'#F59E0B'});
-  el('path',{d:'M462 460q24 18 10 62q-26-10-20-50z',fill:'#B91C1C'});
-  el('ellipse',{cx:395,cy:462,rx:16,ry:9,fill:'#E9967A',opacity:.7});el('ellipse',{cx:505,cy:462,rx:16,ry:9,fill:'#E9967A',opacity:.7});
- }else if(theme==='ornaments'){
-  el('rect',{x:410,y:800,width:80,height:70,rx:8,fill:'#7C4A21'});
-  el('path',{d:'M450 90L790 810H110Z',fill:'#2F6E4F'});
-  el('path',{d:'M450 90L640 500H260Z',fill:'#3B8762',opacity:.6});
-  el('path',{d:'M450 40l14 30 32 4-24 22 6 32-28-16-28 16 6-32-24-22 32-4z',fill:'#FBBF24'});
-  S.forEach(function(sl,i){var filled=i<count;el('line',{x1:sl.x,y1:sl.y-44,x2:sl.x,y2:sl.y-30,stroke:'#CBD5E1','stroke-width':4});
-   el('circle',{cx:sl.x,cy:sl.y,r:30,'class':'slot '+(filled?'':'empty')+(i===lit?' lit':'')+(i===newIdx?' new':''),fill:filled?pal[i%pal.length]:'#fff'});});
- }else{
-  S.forEach(function(sl,i){var filled=i<count;var x=sl.x,y=sl.y;
-   el('path',{d:'M'+x+' '+(y+42)+'C'+(x-70)+' '+(y-5)+' '+(x-52)+' '+(y-55)+' '+x+' '+(y-24)+'C'+(x+52)+' '+(y-55)+' '+(x+70)+' '+(y-5)+' '+x+' '+(y+42)+'Z','class':'slot '+(filled?'':'empty')+(i===lit?' lit':'')+(i===newIdx?' new':''),fill:filled?pal[i%pal.length]:'#fff'});});
- }
- return S.length;
+function words(n,len){
+ if(n.type==='ink')return '<img src="'+n.img+'" alt="Handwritten thankful note">';
+ var t=n.text||'',fs=t.length>64?19:t.length>40?21:25;
+ return '<span style="font-size:'+fs+'px">'+E(t)+'</span>';
 }
-function approved(){return AFC.all().filter(function(n){return n.status==='approved';}).sort(function(a,b){return (a.approvedTs||a.ts)-(b.approvedTs||b.ts);});}
+function drawTurkey(){
+ body.innerHTML='';
+ el('ellipse',{cx:960,cy:1050,rx:360,ry:24,fill:'#E9D5B0'});
+ el('path',{d:'M905 990l-12 50M893 1040l-28 12M893 1040l0 18M893 1040l24 12M1015 990l12 50M1027 1040l-24 12M1027 1040l0 18M1027 1040l28 12',stroke:'#E8590C','stroke-width':12,'stroke-linecap':'round',fill:'none'});
+ el('ellipse',{cx:960,cy:820,rx:190,ry:200,fill:'#8B5A2B'});
+ el('ellipse',{cx:960,cy:865,rx:120,ry:140,fill:'#C08552'});
+ el('path',{d:'M822 780q-46 92 12 172q34-70 34-150z',fill:'#6F4520'});el('path',{d:'M1098 780q46 92-12 172q-34-70-34-150z',fill:'#6F4520'});
+ el('circle',{cx:960,cy:590,r:100,fill:'#A0522D'});
+ el('circle',{cx:924,cy:568,r:22,fill:'#fff'});el('circle',{cx:996,cy:568,r:22,fill:'#fff'});
+ el('circle',{cx:928,cy:572,r:11,fill:'#0F172A'});el('circle',{cx:992,cy:572,r:11,fill:'#0F172A'});
+ el('path',{d:'M935 608l25 42l25-42z',fill:'#F59E0B'});
+ el('path',{d:'M972 624q27 20 11 70q-29-11-23-56z',fill:'#B91C1C'});
+ el('ellipse',{cx:899,cy:624,rx:18,ry:10,fill:'#E9967A',opacity:.7});el('ellipse',{cx:1021,cy:624,rx:18,ry:10,fill:'#E9967A',opacity:.7});
+}
+function drawFeathers(list,newId){
+ board.innerHTML='';var pal=COLORS.turkey;
+ var show=list.slice(-ANGLES.length);
+ show.forEach(function(n,i){
+  var a=ANGLES[i],f=document.createElement('div');
+  f.className='feather'+(n.id===newId?' new':'');
+  f.style.cssText='left:'+(PX-W/2)+'px;top:'+(PY-LEN)+'px;width:'+W+'px;height:'+LEN+'px;background:'+pal[i%pal.length]+';transform:rotate('+a+'deg)';
+  /* Words run along the feather and always read left to right */
+  var rot=a<0?90:-90,tw=220,th=96,cy=LEN-440;
+  f.innerHTML='<div class="words" style="width:'+tw+'px;height:'+th+'px;margin-left:'+(-tw/2)+'px;top:'+(cy-th/2)+'px;transform:rotate('+rot+'deg)">'+words(n,LEN)+'</div>';
+  board.appendChild(f);
+ });
+}
+function drawTokens(theme,list,newId){
+ body.innerHTML='';board.innerHTML='';var pal=COLORS[theme];
+ var show=list.slice(-12),cols=4,cw=380,chh=230,x0=(1920-cols*cw)/2;
+ show.forEach(function(n,i){var t=document.createElement('div');t.className='token'+(n.id===newId?' new':'');
+  var r=theme==='hearts'?'46% 46% 50% 50% / 40% 40% 60% 60%':'50%';
+  t.style.cssText='left:'+(x0+(i%cols)*cw+20)+'px;top:'+(230+Math.floor(i/cols)*chh+10)+'px;width:'+(cw-40)+'px;height:'+(chh-20)+'px;border-radius:'+r+';background:'+pal[i%pal.length];
+  t.innerHTML=words(n,cw);board.appendChild(t);});
+}
 function render(newId){
- var th=AFC.theme(),list=approved(),total;
+ var th=AFC.theme(),list=approved();
  document.getElementById('question').textContent=th.question;
  document.getElementById('month').textContent=th.month+(th.live?' thankful board':' theme preview, coming soon');
  document.getElementById('num').textContent=list.length;
  document.getElementById('unit').textContent=(list.length===1?th.unit:th.units)+' of thanks';
- if(idx>=list.length)idx=0;
- var newIdx=-1;if(newId){list.forEach(function(n,i){if(n.id===newId){idx=i;newIdx=i;}});}
- total=drawArt(th.id,Math.min(list.length,99),list.length?idx:-1,newIdx);
- var spot=document.getElementById('spot');
- if(!list.length){spot.innerHTML='<div class="eyebrow">Our thankful board</div><div class="empty-msg" style="margin-top:24px">Be the first to add a '+th.unit+'!</div>';return;}
- var n=list[idx],shown=Math.min(list.length,total);
- var tag=n.sample?'<span class="tag">Sample</span>':(n.id===fresh?'<span class="tag fresh">New</span>':'');
- var body=n.type==='ink'?'<img src="'+n.img+'" alt="Handwritten thankful note">':'<div class="msg'+(n.text.length>60?' small':'')+'">&ldquo;'+E(n.text)+'&rdquo;</div>';
- spot.innerHTML='<div class="eyebrow">Thankful note '+(idx+1)+' of '+list.length+tag+'</div>'+body+'<div class="dots">'+list.map(function(_,i){return '<i class="'+(i===idx?'on':'')+'"></i>';}).join('')+'</div>';
+ if(th.id==='turkey'){drawTurkey();drawFeathers(list,newId);}else{drawTokens(th.id,list,newId);}
 }
-function cycle(){clearInterval(timer);timer=setInterval(function(){var l=approved();if(l.length>1){idx=(idx+1)%l.length;render();}},7000);}
 function changed(){
  var ids=approved().map(function(n){return n.id;});var newId=null;
  if(seen){ids.forEach(function(id){if(seen.indexOf(id)<0)newId=id;});}
- seen=ids;if(newId)fresh=newId;render(newId);if(newId)cycle();
+ seen=ids;if(newId)fresh=newId;render(newId);
 }
 function fit(){var s=Math.min(innerWidth/1920,innerHeight/1080);document.getElementById('stage').style.transform='translate(-50%,-50%) scale('+s+')';}
 window.addEventListener('resize',fit);fit();
 document.getElementById('fs').onclick=function(){if(document.documentElement.requestFullscreen)document.documentElement.requestFullscreen();};
 var hideT;document.addEventListener('mousemove',function(){var b=document.getElementById('fs');b.style.display='';clearTimeout(hideT);hideT=setTimeout(function(){b.style.display='none';},3000);});
-AFC.onChange(changed);changed();cycle();
+AFC.onChange(changed);changed();
 })();
 </script></body></html>

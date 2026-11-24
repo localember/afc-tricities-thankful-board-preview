@@ -1,6 +1,6 @@
 /* AFC thankful board design preview. Client side only: localStorage + BroadcastChannel. No network calls. */
 (function(){
-  var KEY='afc-thankful-notes-v1', TKEY='afc-thankful-theme-v1';
+  var KEY='afc-thankful-notes-v2', TKEY='afc-thankful-theme-v1';
   var THEMES={
     turkey:{id:'turkey',month:'November',name:'Thankful turkey',unit:'feather',units:'feathers',question:'Why are you thankful for chiropractic?',live:true},
     ornaments:{id:'ornaments',month:'December',name:'Winter ornaments',unit:'ornament',units:'ornaments',question:'What brings you joy this winter?',live:false},
@@ -9,10 +9,10 @@
   function seed(){
     var t=Date.now();
     return [
-      {id:'s1',type:'text',text:'Sample: The friendly team every visit',status:'approved',sample:true,ts:t-500000},
-      {id:'s2',type:'text',text:'Sample: Feeling cared for',status:'approved',sample:true,ts:t-400000},
-      {id:'s3',type:'text',text:'Sample: A welcoming front desk that knows my family',status:'approved',sample:true,ts:t-300000},
-      {id:'s4',type:'text',text:'Sample: Time set aside just for me',status:'approved',sample:true,ts:t-200000},
+      {id:'s1',type:'text',text:'Sample: The friendly team every visit',status:'pending',sample:true,ts:t-500000},
+      {id:'s2',type:'text',text:'Sample: Feeling cared for',status:'pending',sample:true,ts:t-400000},
+      {id:'s3',type:'text',text:'Sample: A welcoming front desk that knows my family',status:'pending',sample:true,ts:t-300000},
+      {id:'s4',type:'text',text:'Sample: Time set aside just for me',status:'pending',sample:true,ts:t-200000},
       {id:'s5',type:'text',text:'Sample: Kind people and a calm office',status:'pending',sample:true,ts:t-100000},
       {id:'s6',type:'text',text:'Sample: Being listened to',status:'pending',sample:true,ts:t-50000}
     ];
