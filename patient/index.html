@@ -1,0 +1,76 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="robots" content="noindex, nofollow"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@600;700;800&family=Caveat:wght@600&display=swap" rel="stylesheet"><title>Share what you are thankful for: AFC Tri-Cities (design preview)</title><link rel="stylesheet" href="../assets/styles.css">
+<style>
+body{background:linear-gradient(180deg,var(--primary-glow),#fff 60%);min-height:100vh}
+.wrap{max-width:760px;margin:0 auto;padding:22px 16px 40px}
+.logo{display:block;height:64px;margin:4px auto 10px}
+.q{text-align:center;margin-bottom:18px}
+.q .badge{margin-bottom:10px}
+.q h1{font-size:clamp(26px,5.4vw,40px);line-height:1.18;color:var(--primary-dark)}
+.q p{color:var(--slate);font-size:16px;margin:10px 0 0}
+.panel{padding:16px}
+.tabs{display:flex;gap:8px;margin-bottom:12px}
+.tabs button{flex:1;font:700 15px var(--font-body);padding:11px;border-radius:12px;border:2px solid var(--line);background:#fff;color:var(--slate);cursor:pointer;min-height:46px}
+.tabs button[aria-pressed=true]{border-color:var(--primary);background:var(--primary-glow);color:var(--primary-dark)}
+.pad{position:relative;border:2px dashed var(--primary-light);border-radius:14px;background:#fff;touch-action:none;overflow:hidden}
+.pad canvas{display:block;width:100%;height:clamp(240px,48vw,420px);cursor:crosshair}
+.pad .hint{position:absolute;inset:0;display:grid;place-items:center;color:var(--primary-light);font:600 20px var(--font-body);pointer-events:none;text-align:center;padding:20px}
+.tools{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap}
+textarea{width:100%;min-height:180px;font:500 20px/1.45 var(--font-body);padding:14px;border:2px solid var(--line);border-radius:14px;resize:vertical;color:var(--ink)}
+textarea:focus{outline:none;border-color:var(--primary)}
+.count{text-align:right;font-size:13px;color:var(--muted);margin-top:6px}
+.note{font-size:14px;color:var(--muted);margin:14px 2px;line-height:1.5}
+.submit{width:100%;font-size:18px;min-height:56px}
+.thanks{text-align:center;padding:40px 22px}
+.thanks svg{width:110px;height:110px}
+.thanks h2{font-size:30px;color:var(--primary-dark);margin:10px 0}
+.thanks p{color:var(--slate);font-size:17px;line-height:1.5}
+[hidden]{display:none!important}
+@media (min-width:700px){.panel{padding:24px}.wrap{padding-top:34px}}
+</style></head><body>
+<div class="preview-banner">Design preview, not live. Notes stay in this browser only.</div>
+<main class="wrap">
+<img class="logo" src="https://www.afctricities.com/wp-content/uploads/2026/04/Advanced-Family-Chiropractic-Logo-v1.png" alt="Advanced Family Chiropractic logo">
+<div id="compose">
+<div class="q"><span class="badge" id="month">November thankful board</span><h1 id="question">Why are you thankful for chiropractic?</h1><p>Your note may become a feather on our waiting room turkey.</p></div>
+<section class="panel card">
+<div class="tabs" role="group" aria-label="How would you like to answer?"><button id="tabWrite" aria-pressed="true">&#9997; Write it</button><button id="tabType" aria-pressed="false">Type instead</button></div>
+<div id="writeBox"><div class="pad"><canvas id="pad" aria-label="Handwriting pad"></canvas><div class="hint" id="hint">Write here with your finger or a stylus</div></div>
+<div class="tools"><button class="btn ghost small" id="undo">Undo</button><button class="btn ghost small" id="clear">Clear</button></div></div>
+<div id="typeBox" hidden><label for="txt" class="muted" style="display:block;margin-bottom:6px;font-weight:600">Your note</label><textarea id="txt" maxlength="120" placeholder="I am thankful for..."></textarea><div class="count"><span id="cnt">0</span> / 120</div></div>
+<p class="note">Please leave out names and health details. Our team reads every note before it appears on the TV. No login needed.</p>
+<button class="btn submit" id="submit" disabled>Submit my note</button>
+</section></div>
+<section id="thanks" class="thanks card" hidden>
+<svg viewBox="0 0 100 100" aria-hidden="true"><circle cx="50" cy="50" r="46" fill="#ECF3F5"/><path d="M30 52l13 13 27-29" fill="none" stroke="#176D8C" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+<h2>Thank you!</h2><p>Your note is on its way to our team. Once approved, it will join the board in our waiting room.</p>
+<button class="btn" id="again" style="margin-top:14px">Add another note</button></section>
+</main>
+<script src="../assets/app.js"></script>
+<script>
+(function(){
+var th=AFC.theme();document.getElementById('question').textContent=th.question;document.getElementById('month').textContent=th.month+' thankful board';
+var c=document.getElementById('pad'),ctx=c.getContext('2d'),strokes=[],cur=null,mode='write';
+function size(){var r=c.getBoundingClientRect(),d=window.devicePixelRatio||1;c.width=r.width*d;c.height=r.height*d;ctx.setTransform(d,0,0,d,0,0);draw();}
+function draw(){var r=c.getBoundingClientRect();ctx.clearRect(0,0,r.width,r.height);ctx.lineCap='round';ctx.lineJoin='round';ctx.strokeStyle='#0E465B';ctx.lineWidth=4;
+strokes.forEach(function(s){ctx.beginPath();s.forEach(function(p,i){i?ctx.lineTo(p[0],p[1]):ctx.moveTo(p[0],p[1]);});if(s.length===1)ctx.lineTo(s[0][0]+.1,s[0][1]);ctx.stroke();});
+document.getElementById('hint').hidden=strokes.length>0;check();}
+function pt(e){var r=c.getBoundingClientRect();return [e.clientX-r.left,e.clientY-r.top];}
+c.addEventListener('pointerdown',function(e){c.setPointerCapture(e.pointerId);cur=[pt(e)];strokes.push(cur);draw();});
+c.addEventListener('pointermove',function(e){if(!cur)return;cur.push(pt(e));draw();});
+['pointerup','pointercancel','pointerleave'].forEach(function(t){c.addEventListener(t,function(){cur=null;});});
+document.getElementById('undo').onclick=function(){strokes.pop();draw();};
+document.getElementById('clear').onclick=function(){strokes=[];draw();};
+var txt=document.getElementById('txt');txt.oninput=function(){document.getElementById('cnt').textContent=txt.value.length;check();};
+function setMode(m){mode=m;document.getElementById('tabWrite').setAttribute('aria-pressed',m==='write');document.getElementById('tabType').setAttribute('aria-pressed',m==='type');
+document.getElementById('writeBox').hidden=m!=='write';document.getElementById('typeBox').hidden=m!=='type';if(m==='write')size();else txt.focus();check();}
+document.getElementById('tabWrite').onclick=function(){setMode('write');};document.getElementById('tabType').onclick=function(){setMode('type');};
+function check(){document.getElementById('submit').disabled=mode==='write'?strokes.length===0:txt.value.trim().length<2;}
+document.getElementById('submit').onclick=function(){
+ if(mode==='write'){var out=document.createElement('canvas'),r=c.getBoundingClientRect();out.width=r.width;out.height=r.height;var o=out.getContext('2d');o.drawImage(c,0,0,r.width,r.height);AFC.add({type:'ink',img:out.toDataURL('image/png'),text:''});}
+ else AFC.add({type:'text',text:txt.value.trim()});
+ strokes=[];txt.value='';document.getElementById('cnt').textContent='0';document.getElementById('compose').hidden=true;document.getElementById('thanks').hidden=false;window.scrollTo(0,0);};
+document.getElementById('again').onclick=function(){document.getElementById('thanks').hidden=true;document.getElementById('compose').hidden=false;setMode(mode);};
+window.addEventListener('resize',size);size();
+window.AFCPatient={sampleInk:function(t){var r=c.getBoundingClientRect(),o=document.createElement('canvas');o.width=r.width;o.height=r.height;var x=o.getContext('2d');x.fillStyle='#0E465B';var fs=Math.round(r.height/3.4);do{x.font='600 '+fs+'px Caveat, cursive';fs-=4;}while(x.measureText(t).width>r.width*0.86&&fs>16);x.textAlign='center';x.textBaseline='middle';x.fillText(t,r.width/2,r.height/2);return AFC.add({type:'ink',img:o.toDataURL('image/png'),text:''});},type:function(t){setMode('type');txt.value=t;txt.oninput();},scribble:function(){setMode('write');var r=c.getBoundingClientRect();var s=[];for(var i=0;i<60;i++)s.push([30+i*(r.width-60)/60,r.height/2+Math.sin(i/3)*30]);strokes.push(s);draw();}};
+})();
+</script></body></html>

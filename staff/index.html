@@ -1,0 +1,83 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="robots" content="noindex, nofollow"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@600;700;800&family=Caveat:wght@600&display=swap" rel="stylesheet"><title>Staff review: AFC thankful board (design preview)</title><link rel="stylesheet" href="../assets/styles.css">
+<style>
+.wrap{max-width:1240px;margin:0 auto;padding:26px 20px 60px;display:grid;grid-template-columns:1fr 340px;gap:24px;align-items:start}
+@media (max-width:900px){.wrap{grid-template-columns:1fr}}
+.head{display:flex;justify-content:space-between;align-items:flex-end;gap:12px;margin-bottom:16px;flex-wrap:wrap}
+.head h1{font-size:30px;color:var(--primary-dark)}
+.filters{display:flex;gap:6px;background:#fff;border:1px solid var(--line);border-radius:999px;padding:4px}
+.filters button{border:0;background:none;font:700 14px var(--font-body);padding:8px 16px;border-radius:999px;color:var(--slate);cursor:pointer}
+.filters button[aria-pressed=true]{background:var(--primary);color:#fff}
+.list{display:grid;gap:12px}
+.item{padding:16px 18px;display:grid;grid-template-columns:1fr auto;gap:14px;align-items:center}
+.item .body{font:600 19px/1.4 var(--font-body);color:var(--ink)}
+.item .meta{font-size:13px;color:var(--muted);margin-top:6px;display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.item img{max-width:100%;height:110px;object-fit:contain;background:#fff;border:1px solid var(--line);border-radius:10px;display:block}
+.item .acts{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end}
+.item textarea{width:100%;font:600 18px var(--font-body);padding:10px;border:2px solid var(--primary);border-radius:10px;min-height:70px}
+.st{font-weight:800;font-size:12px;text-transform:uppercase;letter-spacing:.05em}
+.st.pending{color:#B54708}.st.approved{color:#127a4a}.st.declined{color:#B42318}
+.empty{padding:30px;text-align:center;color:var(--muted)}
+.side .card{padding:20px;margin-bottom:16px}
+.side h2{font-size:18px;color:var(--primary-dark);margin-bottom:12px}
+.theme{display:flex;align-items:center;gap:12px;padding:12px;border:2px solid var(--line);border-radius:14px;margin-bottom:10px;cursor:pointer;background:#fff;width:100%;text-align:left;font:inherit}
+.theme[aria-pressed=true]{border-color:var(--primary);background:var(--primary-glow)}
+.theme svg{width:44px;height:44px;flex:none}
+.theme b{display:block;font-size:15px}.theme small{color:var(--muted)}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;text-align:center}
+.stats div{background:var(--bg);border-radius:12px;padding:10px 4px}
+.stats b{display:block;font:800 26px var(--font-heading);color:var(--primary-dark)}
+.stats span{font-size:12px;color:var(--muted)}
+</style></head><body>
+<div class="preview-banner">Design preview, not live. A real version would need a staff login.</div>
+<header class="topbar"><img src="https://www.afctricities.com/wp-content/uploads/2026/04/Advanced-Family-Chiropractic-Logo-v1.png" alt="Advanced Family Chiropractic logo"><nav><a href="../">Preview home</a><a href="../patient/">Patient screen</a><a href="../tv/" target="_blank">Open TV</a></nav></header>
+<div class="wrap">
+<main>
+<div class="head"><div><span class="badge">Staff review</span><h1 style="margin-top:8px">Incoming notes</h1><p class="muted" style="margin:6px 0 0">Nothing shows on the TV until it is approved.</p></div>
+<div class="filters" role="group"><button data-f="pending" aria-pressed="true">Pending <span id="cP"></span></button><button data-f="approved" aria-pressed="false">Approved <span id="cA"></span></button><button data-f="declined" aria-pressed="false">Declined <span id="cD"></span></button></div></div>
+<div class="list" id="list"></div>
+</main>
+<aside class="side">
+<div class="card"><h2>At a glance</h2><div class="stats"><div><b id="sP">0</b><span>Pending</span></div><div><b id="sA">0</b><span>On the TV</span></div><div><b id="sD">0</b><span>Declined</span></div></div></div>
+<div class="card"><h2>Monthly theme</h2><div id="themes"></div><p class="muted" style="font-size:13px;margin:6px 0 0">December and February are coming soon. Tap one to preview the swap on the TV.</p></div>
+<div class="card"><h2>Review tips</h2><p class="muted" style="font-size:14px;line-height:1.5;margin:0">Decline notes with names, health details or anything you would not want on the waiting room TV. Typed notes can be edited. Handwritten notes show as an image, so approve or decline them.</p>
+<button class="btn ghost small" id="reset" style="margin-top:14px">Reset demo data</button></div>
+</aside></div>
+<script src="../assets/app.js"></script>
+<script>
+(function(){
+var filter='pending',editing=null,E=AFC.esc;
+var icons={turkey:'<svg viewBox="0 0 44 44"><g transform="translate(22 26)"><path d="M0 0L-16-10L-8-18z" fill="#E8590C"/><path d="M0 0L-6-20L6-20z" fill="#F59E0B"/><path d="M0 0L8-18L16-10z" fill="#B91C1C"/></g><circle cx="22" cy="28" r="9" fill="#8B5A2B"/><circle cx="22" cy="18" r="5" fill="#A0522D"/></svg>',
+ornaments:'<svg viewBox="0 0 44 44"><path d="M22 4L36 38H8z" fill="#2F6E4F"/><circle cx="18" cy="24" r="3" fill="#176D8C"/><circle cx="26" cy="30" r="3" fill="#FBBF24"/><circle cx="24" cy="17" r="3" fill="#B91C1C"/></svg>',
+hearts:'<svg viewBox="0 0 44 44"><path d="M22 38C6 27 4 18 9 12c4-5 10-4 13 1 3-5 9-6 13-1 5 6 3 15-13 26z" fill="#E0457B"/></svg>'};
+function render(){
+ var all=AFC.all().sort(function(a,b){return b.ts-a.ts;});
+ var cnt={pending:0,approved:0,declined:0};all.forEach(function(n){cnt[n.status]++;});
+ document.getElementById('cP').textContent='('+cnt.pending+')';document.getElementById('cA').textContent='('+cnt.approved+')';document.getElementById('cD').textContent='('+cnt.declined+')';
+ document.getElementById('sP').textContent=cnt.pending;document.getElementById('sA').textContent=cnt.approved;document.getElementById('sD').textContent=cnt.declined;
+ var items=all.filter(function(n){return n.status===filter;});
+ document.getElementById('list').innerHTML=items.length?items.map(function(n){
+  var body=n.type==='ink'?'<img src="'+n.img+'" alt="Handwritten note">':(editing===n.id?'<textarea id="ed">'+E(n.text)+'</textarea>':'<div class="body">'+E(n.text)+'</div>');
+  var acts='';
+  if(editing===n.id)acts='<button class="btn small ok" data-a="save" data-id="'+n.id+'">Save</button><button class="btn small ghost" data-a="cancel">Cancel</button>';
+  else{if(n.status!=='approved')acts+='<button class="btn small ok" data-a="approve" data-id="'+n.id+'">Approve</button>';
+   if(n.type==='text')acts+='<button class="btn small ghost" data-a="edit" data-id="'+n.id+'">Edit</button>';
+   if(n.status!=='declined')acts+='<button class="btn small danger" data-a="decline" data-id="'+n.id+'">'+(n.status==='approved'?'Remove':'Decline')+'</button>';}
+  return '<div class="item card" data-id="'+n.id+'"><div>'+body+'<div class="meta"><span class="st '+n.status+'">'+n.status+'</span>'+(n.sample?'<span class="badge sample">Sample</span>':'')+'<span>'+(n.type==='ink'?'Handwritten':'Typed')+'</span><span>'+new Date(n.ts).toLocaleString([], {month:'short',day:'numeric',hour:'numeric',minute:'2-digit'})+'</span></div></div><div class="acts">'+acts+'</div></div>';
+ }).join(''):'<div class="card empty">No '+filter+' notes right now.</div>';
+ var cur=AFC.theme().id;
+ document.getElementById('themes').innerHTML=Object.keys(AFC.THEMES).map(function(k){var t=AFC.THEMES[k];return '<button class="theme" data-theme="'+k+'" aria-pressed="'+(cur===k)+'">'+icons[k]+'<span><b>'+t.name+'</b><small>'+t.month+(t.live?', live now':', coming soon')+'</small></span></button>';}).join('');
+}
+document.addEventListener('click',function(e){
+ var b=e.target.closest('button');if(!b)return;
+ if(b.dataset.f){filter=b.dataset.f;editing=null;document.querySelectorAll('.filters button').forEach(function(x){x.setAttribute('aria-pressed',x===b);});render();}
+ else if(b.dataset.theme)AFC.setTheme(b.dataset.theme);
+ else if(b.id==='reset'){AFC.reset();}
+ else if(b.dataset.a==='approve')AFC.update(b.dataset.id,{status:'approved',approvedTs:Date.now()});
+ else if(b.dataset.a==='decline')AFC.update(b.dataset.id,{status:'declined'});
+ else if(b.dataset.a==='edit'){editing=b.dataset.id;render();var t=document.getElementById('ed');t.focus();}
+ else if(b.dataset.a==='save'){var v=document.getElementById('ed').value.trim();var id=b.dataset.id;editing=null;if(v)AFC.update(id,{text:v});else render();}
+ else if(b.dataset.a==='cancel'){editing=null;render();}
+});
+AFC.onChange(function(){if(!editing)render();});render();
+})();
+</script></body></html>
